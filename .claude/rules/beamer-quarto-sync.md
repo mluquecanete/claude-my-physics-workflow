@@ -4,6 +4,9 @@ paths:
   - "Quarto/**/*.qmd"
 ---
 
+<!-- NOTE: Quarto is not used in this project. This rule is dormant.
+     No .qmd files exist, so the sync steps below will never trigger. -->
+
 # Beamer → Quarto Auto-Sync Rule (MANDATORY)
 
 **Every edit to a Beamer `.tex` file MUST be immediately synced to the corresponding Quarto `.qmd` file — automatically, without the user asking.** This is non-negotiable.

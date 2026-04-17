@@ -5,6 +5,9 @@ paths:
   - "scripts/**/*.R"
 ---
 
+<!-- NOTE: R is not used in this project. This rule is dormant.
+     For Python conventions, see python-code-conventions.md -->
+
 # R Code Standards
 
 **Standard:** Senior Principal Data Engineer + PhD researcher quality

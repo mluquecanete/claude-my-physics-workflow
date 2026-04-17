@@ -22,19 +22,19 @@ Repeat
 
 ## I Ask You When
 
-- **Design forks:** "Option A (fast) vs. Option B (robust). Which?"
-- **Code ambiguity:** "Spec unclear on X. Assume Y?"
-- **Replication edge case:** "Just missed tolerance. Investigate?"
-- **Scope question:** "Also refactor Y while here, or focus on X?"
+- **Method forks:** "Approach A (dielectric-continuum) vs Approach B (ab initio phonons). Which?"
+- **Numerical ambiguity:** "Spec unclear on wavevector grid density. Use N=200?"
+- **Convergence edge case:** "Scattering integral just missed tolerance. Investigate?"
+- **Scope question:** "Also refactor phonon branch selection while here, or focus on current task?"
 
 ---
 
 ## I Just Execute When
 
 - Code fix is obvious (bug, pattern application)
-- Verification (tolerance checks, tests, compilation)
+- Verification (tolerance checks, compilation, numerical convergence)
 - Documentation (logs, commits)
-- Plotting (per established standards)
+- Plotting (per established standards below)
 - Deployment (after you approve, I ship automatically)
 
 ---
@@ -48,33 +48,30 @@ Repeat
 
 ---
 
-## Non-Negotiables (Customize These)
+## Non-Negotiables
 
-<!-- Replace with YOUR project's locked-in preferences -->
-
-- [YOUR PATH CONVENTION] (e.g., `here::here()` for R, relative paths for LaTeX)
-- [YOUR SEED CONVENTION] (e.g., `set.seed()` once at top for stochastic code)
-- [YOUR FIGURE STANDARDS] (e.g., white bg, 300 DPI, custom theme)
-- [YOUR COLOR PALETTE] (e.g., institutional colors)
-- [YOUR TOLERANCE THRESHOLDS] (e.g., 1e-6 for point estimates)
+- **Paths:** always relative to repository root (`pathlib.Path(__file__).parent`)
+- **Reproducibility:** `np.random.seed(YYYYMMDD)` once at top of stochastic scripts
+- **Figures:** `savefig(path, dpi=300, bbox_inches='tight')`; save as `.pdf` (LaTeX) + `.png` (preview)
+- **Heavy outputs:** save computed arrays as `.npy` or `.npz` to `output/`; scripts and notebooks load pre-computed data
+- **Tolerance:** numerical convergence checked to `rtol=1e-6` by default; document when looser tolerance is justified
+- **Units:** all physical quantities carry explicit unit comments
 
 ---
 
 ## Preferences
 
-<!-- Fill in as you discover your working style -->
-
-**Visual:** [How you want figures/plots handled]
-**Reporting:** [Concise bullets? Detailed prose? Details on request?]
-**Session logs:** Always (post-plan, incremental, end-of-session)
-**Replication:** [How strict? Flag near-misses?]
+**Visual:** matplotlib with explicit `figsize`; axis labels with units; physical constants in legends
+**Reporting:** concise bullets; detailed derivations on request
+**Session logs:** always (post-plan, incremental, end-of-session)
+**Replication:** strict — flag near-misses; document all convergence parameters
 
 ---
 
 ## Exploration Mode
 
-For experimental work, use the **Fast-Track** workflow:
-- Work in `explorations/` folder
+For experimental/sandbox work, use the **Fast-Track** workflow:
+- Work in `explorations/` or `notebooks/` folder
 - 60/100 quality threshold (vs. 80/100 for production)
 - No plan needed — just a research value check (2 min)
 - See `.claude/rules/exploration-fast-track.md`

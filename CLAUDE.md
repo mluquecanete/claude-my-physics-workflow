@@ -1,12 +1,7 @@
-# CLAUDE.MD -- Academic Project Development with Claude Code
+# CLAUDE.MD -- PhD Research Workflow
 
-<!-- HOW TO USE: Replace [BRACKETED PLACEHOLDERS] with your project info.
-     Customize Beamer environments and CSS classes for your theme.
-     Keep this file under ~150 lines — Claude loads it every session.
-     See the guide at docs/workflow-guide.html for full documentation. -->
-
-**Project:** [YOUR PROJECT NAME]
-**Institution:** [YOUR INSTITUTION]
+**Project:** Phonon-Limited Transport of Topological Surface States in Bi₂Se₃
+**Institution:** King's College London
 **Branch:** main
 
 ---
@@ -14,8 +9,8 @@
 ## Core Principles
 
 - **Plan first** -- enter plan mode before non-trivial tasks; save plans to `quality_reports/plans/`
-- **Verify after** -- compile/render and confirm output at the end of every task
-- **Single source of truth** -- Beamer `.tex` is authoritative; Quarto `.qmd` derives from it
+- **Verify after** -- compile/run and confirm output at the end of every task
+- **Single source of truth** -- Beamer `.tex` is authoritative for slides; Python scripts are authoritative for numerics
 - **Quality gates** -- nothing ships below 80/100
 - **[LEARN] tags** -- when corrected, save `[LEARN:category] wrong → right` to [MEMORY.md](MEMORY.md)
 
@@ -26,20 +21,21 @@ Cross-session context lives in [MEMORY.md](MEMORY.md); past plans, specs, and se
 ## Folder Structure
 
 ```
-[YOUR-PROJECT]/
-├── CLAUDE.MD                    # This file
+phonon-transport/
+├── CLAUDE.md                    # This file
 ├── .claude/                     # Rules, skills, agents, hooks
 ├── Bibliography_base.bib        # Centralized bibliography
-├── Figures/                     # Figures and images
-├── Preambles/header.tex         # LaTeX headers
-├── Slides/                      # Beamer .tex files
-├── Quarto/                      # RevealJS .qmd files + theme
-├── docs/                        # GitHub Pages (auto-generated)
-├── scripts/                     # Utility scripts + R code
-├── quality_reports/             # Plans, session logs, merge reports, decision records
-├── explorations/                # Research sandbox (see rules)
+├── Figures/                     # Figures and images (PDF + PNG)
+├── Preambles/header.tex         # LaTeX headers (Beamer + article)
+├── Slides/                      # Beamer .tex files (talks, posters)
+├── papers/                      # Manuscript drafts (.tex)
+├── notebooks/                   # Jupyter notebooks (exploration)
+├── scripts/                     # Python scripts (production numerics)
+├── output/                      # Computed arrays (.npy/.npz), figures
+├── quality_reports/             # Plans, session logs, merge reports
+├── explorations/                # Research sandbox
 ├── templates/                   # Session log, quality report templates
-└── master_supporting_docs/      # Papers and existing slides
+└── master_supporting_docs/      # Reference papers and existing slides
 ```
 
 ---
@@ -53,20 +49,15 @@ BIBINPUTS=..:$BIBINPUTS bibtex file
 TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
 TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
 
-# Deploy Quarto to GitHub Pages
-./scripts/sync_to_docs.sh LectureN
+# Run Python analysis script
+python scripts/script_name.py
+
+# Run Jupyter notebook (headless)
+jupyter nbconvert --to notebook --execute notebooks/notebook.ipynb
 
 # Quality score
-python scripts/quality_score.py Quarto/file.qmd
-
-# Palette sync (LaTeX ↔ SCSS)
-./scripts/check-palette-sync.sh
-
-# Surface-count sync (README ↔ CLAUDE.md ↔ guide ↔ landing page)
-./scripts/check-surface-sync.sh
+python scripts/quality_score.py Slides/file.tex
 ```
-
-**Palette contract:** color names in `Preambles/header.tex` must match SCSS variables in `Quarto/theme-template.scss`. See [`Preambles/README.md`](Preambles/README.md).
 
 ---
 
@@ -87,60 +78,45 @@ Enforced by `/commit` (halts + asks for override); not enforced by a git pre-com
 | Command | What It Does |
 |---------|-------------|
 | `/compile-latex [file]` | 3-pass XeLaTeX + bibtex |
-| `/deploy [LectureN]` | Render Quarto + sync to docs/ |
-| `/extract-tikz [LectureN]` | TikZ → PDF → SVG |
-| `/new-diagram [snippet] [output.tex]` | Scaffold a TikZ diagram from the gallery with prevention + review |
+| `/new-diagram [snippet] [output.tex]` | Scaffold a TikZ diagram from the gallery |
+| `/extract-tikz [file]` | TikZ → PDF → SVG |
 | `/proofread [file]` | Grammar/typo/overflow review |
 | `/visual-audit [file]` | Slide layout audit |
 | `/pedagogy-review [file]` | Narrative, notation, pacing review |
-| `/review-r [file]` | R code quality review |
-| `/qa-quarto [LectureN]` | Adversarial Quarto vs Beamer QA |
 | `/slide-excellence [file]` | Combined multi-agent review |
-| `/translate-to-quarto [file]` | Beamer → Quarto translation |
 | `/validate-bib` | Cross-reference citations |
 | `/devils-advocate` | Challenge slide design |
-| `/create-lecture` | Full lecture creation |
+| `/create-lecture` | Full lecture/talk creation |
 | `/commit [msg]` | Stage, commit, PR, merge |
 | `/lit-review [topic]` | Literature search + synthesis |
 | `/research-ideation [topic]` | Research questions + strategies |
 | `/interview-me [topic]` | Interactive research interview |
-| `/review-paper [file]` | Manuscript review (single-pass / `--adversarial` / `--peer <journal>` simulated pipeline) |
+| `/review-paper [file]` | Manuscript review (single-pass / `--adversarial` / `--peer <journal>`) |
 | `/respond-to-referees [report] [manuscript]` | R&R cross-reference + response draft |
-| `/data-analysis [dataset]` | End-to-end R analysis |
-| `/audit-reproducibility [paper]` | Enforce replication tolerance thresholds on paper ↔ code |
+| `/seven-pass-review` | Seven-pass adversarial manuscript review |
+| `/verify-claims [file]` | Chain-of-Verification fact-check |
 | `/learn [skill-name]` | Extract discovery into persistent skill |
 | `/context-status` | Show session health + context usage |
 | `/deep-audit` | Repository-wide consistency audit |
-| `/permission-check` | Diagnose permission layers when prompts fire unexpectedly |
-| `/seven-pass-review` | Seven-pass adversarial manuscript review (parallel forked subagents) |
-| `/verify-claims [file]` | Chain-of-Verification fact-check (forked verifier, fresh context) |
+| `/permission-check` | Diagnose permission layers |
+
+**Not applicable (tools not installed):** `/review-r`, `/data-analysis`, `/qa-quarto`, `/translate-to-quarto`, `/deploy`
 
 ---
-
-<!-- CUSTOMIZE: Replace placeholder rows ([your-env], [.your-class]) with your own.
-     Delete the rows marked "(example — delete)" once you've added yours. -->
 
 ## Beamer Custom Environments
 
 | Environment | Effect | Use Case |
 | --- | --- | --- |
-| `[your-env]` | [Description] | [When to use] |
-| `keybox` | Gold background box | Key points *(example — delete)* |
-| `definitionbox[Title]` | Blue-bordered titled box | Formal definitions *(example — delete)* |
-
-## Quarto CSS Classes
-
-| Class | Effect | Use Case |
-| --- | --- | --- |
-| `[.your-class]` | [Description] | [When to use] |
-| `.smaller` | 85% font | Dense content *(example — delete)* |
-| `.positive` | Green bold | Good annotations *(example — delete)* |
+| `keybox` | Gold background box | Key results, takeaways |
+| `definitionbox[Title]` | Blue-bordered titled box | Formal definitions |
 
 ---
 
 ## Current Project State
 
-| Lecture | Beamer | Quarto | Key Content |
-| --- | --- | --- | --- |
-| HelloWorld *(sample — delete when ready)* | `HelloWorld.tex` | `HelloWorld.qmd` | Minimal deck to verify setup |
-| 1: [Topic] | `Lecture01_Topic.tex` | `Lecture1_Topic.qmd` | [Brief description] |
+| Output | File | Topic |
+| --- | --- | --- |
+| Talk 1 | `Slides/Talk01_PhononTransport.tex` | Phonon-limited mobility in Bi₂Se₃ surface states |
+| Paper draft | `papers/paper_phonon_transport.tex` | Main manuscript |
+| Numerics | `scripts/scattering_rates.py` | Scattering-rate calculations |
